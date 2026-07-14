@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>مفكرة المسعف الذكية</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;800;900&family=Cairo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- طبقة التعتيم الخلفية -->
+    <div class="index-overlay" id="indexOverlay"></div>
+
+    <div class="field-container">
+      <header class="field-header">
+        <div class="brand">
+          <div class="brand-mark">
+            <svg viewBox="0 0 40 40" class="cross-icon">
+              <rect x="16" y="4" width="8" height="32" rx="2" />
+              <rect x="4" y="16" width="32" height="8" rx="2" />
+            </svg>
+          </div>
+          <div class="brand-text">
+            <div class="brand-title">مفكرة المسعف الذكية</div>
+            <div class="brand-sub">SMART PARAMEDIC NOTEBOOK</div>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <div class="emergency-dial">
+            <div class="dial-cards">
+              <a class="dial-card red" href="tel:133">
+                <span class="dial-number">133</span>
+                <span class="dial-name">الهلال الأحمر</span>
+              </a>
+              <a class="dial-card blue" href="tel:110">
+                <span class="dial-number">110</span>
+                <span class="dial-name">الصحة</span>
+              </a>
+              <a class="dial-card amber" href="tel:188">
+                <span class="dial-number">188</span>
+                <span class="dial-name">الدفاع المدني</span>
+              </a>
+            </div>
+          </div>
+          <button id="darkModeBtn" class="btn-icon">🌙</button>
+        </div>
+      </header>
+
+      <div class="vitals-strip">
+        <svg
+          class="vitals-line"
+          viewBox="0 0 1200 40"
+          preserveAspectRatio="none"
+        >
+          <path d="M0 20 H430 L450 20 L465 4 L482 36 L500 20 L520 20 H1200" />
+        </svg>
+        <div class="progress-track">
+          <div id="progressBar" class="progress-fill"></div>
+        </div>
+      </div>
+
+      <main class="book-canvas">
+        <!-- قائمة الفهرس الجانبية -->
+        <aside class="book-page page-left" id="indexSidebar">
+          <div class="page-header">
+            <span class="page-header-title">فهرس المحاضرة</span>
+            <span class="page-header-count" id="indexCount"></span>
+          </div>
+          <input
+            type="text"
+            id="searchInput"
+            class="search-box"
+            placeholder="ابحث في الفهرس…"
+          />
+
+          <!-- روابط الفهرس الديناميكية -->
+          <div
+            class="index-links"
+            id="indexLinks"
+            style="flex: 1; overflow-y: auto"
+          ></div>
+
+          <div class="developer-card">
+            <div class="dev-body">
+              <p class="dev-author">برمجة وتطوير: <span>علي زيتون</span></p>
+              <p class="dev-mentor">إشراف المدرب: <span>أسامة السيد</span></p>
+            </div>
+          </div>
+        </aside>
+
+        <!-- صفحة المحتوى الحالية -->
+        <article class="book-page page-right" id="contentPage">
+          <div class="page-meta">
+            <span class="page-chapter" id="pageChapter"></span>
+            <span class="page-code" id="pageCode"></span>
+          </div>
+          <h1 class="page-title" id="pageTitle"></h1>
+          <h2 class="page-subtitle" id="pageEnglishTitle"></h2>
+          <p class="page-intro" id="pageIntro"></p>
+          <hr class="book-divider" />
+          <div class="page-body" id="pageBody"></div>
+          <div class="page-footer" id="pageNumbering"></div>
+        </article>
+      </main>
+
+      <nav class="book-controls">
+        <button id="prevBtn" class="btn-book">▶ السابقة</button>
+
+        <!-- زر عرض الفهرس الأوسط للموبايل -->
+        <button id="toggleIndexBtn" class="btn-book amber-btn">
+          📋 عرض الفهرس
+        </button>
+
+        <button id="nextBtn" class="btn-book">التالية ◀</button>
+      </nav>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

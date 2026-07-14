@@ -1,0 +1,996 @@
+/* ==========================================================================
+   دفتر الميدان — First Aid Field Manual
+   Design: paramedic field-notebook aesthetic. Light warm background for day,
+   deep navy for dark mode. Comfortable, scrollable & highly responsive.
+   ========================================================================== */
+
+:root {
+  --ink: #10192c;
+  --ink-soft: #1c2c4a;
+  /* ألوان وضع النهار (Light Mode) */
+  --bg-app: #f4f0e6;
+  --paper: #faf6ee;
+  --paper-panel: #f3ede0;
+  --line: #e2d9c4;
+  --text: #23293a;
+  --text-soft: #5b6172;
+
+  /* الألوان الطبية المميزة */
+  --red: #c31f39;
+  --red-deep: #9c1830;
+  --green: #2f6f4e;
+  --amber: #c9860f;
+  --blue: #1c6e8c;
+
+  --radius-lg: 18px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+  --shadow-card: 0 10px 30px rgba(16, 25, 44, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Cairo", "Tajawal", system-ui, sans-serif;
+  background: var(--bg-app);
+  background-image:
+    radial-gradient(
+      circle at 15% 0%,
+      rgba(255, 255, 255, 0.6),
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at 85% 100%,
+      rgba(195, 31, 57, 0.05),
+      transparent 55%
+    );
+  color: var(--text);
+  margin: 0;
+  padding: 20px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition:
+    background 0.4s,
+    color 0.4s;
+}
+
+body.dark {
+  background: #05070d;
+  --bg-app: #05070d;
+  --paper: #12131a;
+  --paper-panel: #181a24;
+  --line: #2b2d3a;
+  --text: #e7e4d9;
+  --text-soft: #9aa4bc;
+}
+
+.field-container {
+  width: 100%;
+  max-width: 1220px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex: 1;
+}
+
+/* ---------------- Header ---------------- */
+
+.field-header {
+  /* خلفية فاتحة هادئة في النهار، وتتحول لداكنة في الليل */
+  background: var(--paper-panel);
+  color: var(--text);
+  border: 1px solid var(--line);
+
+  padding: 20px 26px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  box-shadow: var(--shadow-card);
+  position: relative;
+  overflow: hidden;
+}
+
+/* تعديل الخط الفرعي ليكون مقروءاً على الخلفية الفاتحة */
+.brand-sub {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.68rem;
+  letter-spacing: 2.5px;
+  color: var(--text-soft); /* تم تعديله ليتناسب مع الخلفية الفاتحة والداكنة */
+  margin-top: 2px;
+}
+
+.field-header::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.025) 0 2px,
+    transparent 2px 14px
+  );
+  pointer-events: none;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 1;
+}
+
+.brand-mark {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: var(--red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(195, 31, 57, 0.45);
+}
+
+.cross-icon {
+  width: 24px;
+  height: 24px;
+  fill: #fff;
+}
+
+.brand-title {
+  font-family: "Tajawal", sans-serif;
+  font-weight: 900;
+  font-size: 1.4rem;
+  letter-spacing: 0.5px;
+}
+
+.brand-sub {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.68rem;
+  letter-spacing: 2.5px;
+  color: #b9c2d6;
+  margin-top: 2px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  z-index: 1;
+}
+
+/* Emergency dial cards */
+
+.emergency-dial {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dial-cards {
+  display: flex;
+  gap: 8px;
+}
+
+/* الكرت الافتراضي (الوضع الفاتح): جعلنا الخلفية بيضاء واضحة والنصوص داكنة */
+.dial-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 64px;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  transition:
+    transform 0.15s,
+    background 0.15s;
+}
+
+.dial-card:hover {
+  transform: translateY(-2px);
+  background: var(--paper);
+}
+
+.dial-number {
+  font-family: "IBM Plex Mono", monospace;
+  font-weight: 700;
+  font-size: 1.05rem;
+  line-height: 1.1;
+}
+
+/* الألوان بالوضع الفاتح: ألوان صريحة وقوية وقابلة للقراءة */
+.dial-card.red .dial-number {
+  color: var(--red);
+}
+.dial-card.blue .dial-number {
+  color: var(--blue);
+}
+.dial-card.amber .dial-number {
+  color: var(--amber);
+}
+
+.dial-name {
+  font-size: 0.62rem;
+  color: var(--text-soft);
+  margin-top: 2px;
+}
+
+/* زر الـ🌙 بالوضع الفاتح */
+.btn-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: #ffffff;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: var(--text);
+  flex-shrink: 0;
+}
+
+body.dark .dial-card {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+body.dark .dial-card:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+body.dark .dial-card.red .dial-number {
+  color: #ff8896;
+}
+body.dark .dial-card.blue .dial-number {
+  color: #7ec8e3;
+}
+body.dark .dial-card.amber .dial-number {
+  color: #f3c66b;
+}
+body.dark .dial-name {
+  color: #cfd5e4;
+}
+
+body.dark .btn-icon {
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  color: #f4f1e8;
+}
+
+/* ---------------- Vitals strip ---------------- */
+
+.vitals-strip {
+  position: relative;
+  height: 34px;
+}
+
+.vitals-line {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.vitals-line path {
+  fill: none;
+  stroke: var(--red);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.55;
+}
+
+body.dark .vitals-line path {
+  stroke: #ff6b7d;
+}
+
+.progress-track {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: rgba(16, 25, 44, 0.12);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+body.dark .progress-track {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(to left, var(--red), var(--amber));
+  transition: width 0.4s ease;
+}
+
+#pageCode {
+  display: none !important;
+}
+
+/* ---------------- Book canvas ---------------- */
+
+.book-canvas {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  background: var(--paper);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--line);
+  height: 650px;
+  overflow: hidden;
+  flex: 1;
+}
+
+@media (max-width: 900px) {
+  .book-canvas {
+    grid-template-columns: 1fr;
+    height: auto;
+    min-height: 600px;
+  }
+}
+
+.book-page {
+  padding: 28px 30px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 768px) {
+  .book-page {
+    padding: 20px 18px;
+  }
+  .page-title {
+    font-size: 1.5rem;
+  }
+}
+
+/* ---------------- Index / sidebar ---------------- */
+
+.page-left {
+  background: var(--paper-panel);
+  border-inline-end: 2px dashed var(--line);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  border-bottom: 2px solid var(--ink);
+  padding-bottom: 10px;
+  margin-bottom: 16px;
+  flex-shrink: 0;
+}
+
+body.dark .page-header {
+  border-bottom-color: var(--line);
+}
+
+.page-header-title {
+  font-family: "Tajawal", sans-serif;
+  font-weight: 800;
+  font-size: 1.05rem;
+  color: var(--ink);
+}
+
+body.dark .page-header-title {
+  color: #f4f1e8;
+}
+
+.page-header-count {
+  font-family: "Cairo", sans-serif; /* تم تعديله لخط عربي أفضل */
+  font-size: 0.72rem;
+  color: var(--text-soft);
+  font-weight: 600;
+}
+
+.search-box {
+  padding: 11px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  width: 100%;
+  margin-bottom: 16px;
+  font-size: 0.92rem;
+  font-family: "Cairo", sans-serif;
+  background: #fff;
+  flex-shrink: 0;
+}
+
+body.dark .search-box {
+  background: #1f2130;
+  color: #e7e4d9;
+  border-color: #333546;
+}
+
+/* تم حل مشكلة الخط هنا نهائياً للفهرس */
+.index-chapter-label {
+  font-family: "Tajawal", "Cairo", sans-serif;
+  font-weight: 800;
+  font-size: 0.8rem;
+  color: var(--red);
+  margin: 14px 2px 6px;
+  text-transform: uppercase;
+}
+
+body.dark .index-chapter-label {
+  color: #ff6b7d;
+}
+
+.index-chapter-label:first-child {
+  margin-top: 0;
+}
+
+.index-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+body.dark .index-item {
+  background: #1f2130;
+  border-color: #333546;
+  color: #e7e4d9;
+}
+
+.index-item-num {
+  font-family: "IBM Plex Mono", monospace;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--text-soft);
+  flex-shrink: 0;
+}
+
+.index-item-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.index-item-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.index-item-code {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.65rem;
+  color: var(--red);
+}
+
+.index-item:hover,
+.index-item.active {
+  border-color: var(--red);
+  background: #fff3f1;
+}
+
+.index-item.active .index-item-num {
+  color: var(--red);
+}
+
+body.dark .index-item:hover,
+body.dark .index-item.active {
+  background: #2a1620;
+  border-color: var(--red);
+}
+
+/* ---------------- كرت معلومات التطوير والمدرب (المعدل) ---------------- */
+.developer-card {
+  background: #fdfaf3;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  margin-top: 15px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(16, 25, 44, 0.02);
+  flex-shrink: 0;
+}
+
+body.dark .developer-card {
+  background: #1a1c28;
+  border-color: #333546;
+}
+
+.dev-header {
+  font-family: "Tajawal", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--text-soft);
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
+}
+
+.dev-body p {
+  margin: 4px 0;
+  font-family: "Cairo", sans-serif;
+  font-size: 0.82rem;
+  color: var(--text);
+}
+
+.dev-body p span {
+  font-weight: 800;
+  color: var(--red);
+}
+
+body.dark .dev-body p span {
+  color: #ff6b7d;
+}
+
+/* ---------------- Content page ---------------- */
+
+.page-right {
+  background: var(--paper);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.page-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.page-chapter {
+  font-family: "Tajawal", sans-serif;
+  font-weight: 700;
+  font-size: 0.75rem;
+  color: var(--text-soft);
+}
+
+.page-code {
+  font-family: "IBM Plex Mono", monospace;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #fff;
+  background: var(--ink);
+  padding: 3px 12px;
+  border-radius: 20px;
+}
+
+body.dark .page-code {
+  background: #25283a;
+  color: #ff6b7d;
+}
+
+.page-title {
+  font-family: "Tajawal", sans-serif;
+  font-weight: 900;
+  margin: 10px 0 2px;
+  font-size: 1.85rem;
+  color: var(--ink);
+}
+
+body.dark .page-title {
+  color: #f4f1e8;
+}
+
+.page-subtitle {
+  color: var(--red);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+body.dark .page-subtitle {
+  color: #ff6b7d;
+}
+
+.page-intro {
+  margin: 16px 0 0;
+  font-size: 1.02rem;
+  line-height: 1.85;
+  color: var(--text);
+  border-inline-start: 3px solid var(--amber);
+  padding-inline-start: 14px;
+}
+
+.book-divider {
+  border: 0;
+  border-top: 1px dashed var(--line);
+  margin: 20px 0;
+  flex-shrink: 0;
+}
+
+.page-body {
+  flex: 1;
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+.section-block {
+  margin-bottom: 26px;
+}
+
+.section-heading {
+  font-family: "Tajawal", sans-serif;
+  font-weight: 800;
+  font-size: 1.08rem;
+  color: var(--ink);
+  margin: 0 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--line);
+}
+
+body.dark .section-heading {
+  color: #f4f1e8;
+}
+
+/* Step list */
+
+.step-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.step-item {
+  display: flex;
+  gap: 16px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  align-items: flex-start;
+}
+
+body.dark .step-item {
+  background: #1a1c28;
+}
+
+.step-badge {
+  flex-shrink: 0;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  border: 2px solid var(--red);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--red);
+  font-family: "IBM Plex Mono", monospace;
+}
+
+body.dark .step-badge {
+  border-color: #ff6b7d;
+  color: #ff6b7d;
+}
+
+.step-letter {
+  font-weight: 700;
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.step-word {
+  font-size: 0.5rem;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+  text-transform: uppercase;
+}
+
+.step-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.step-title {
+  display: block;
+  font-family: "Tajawal", sans-serif;
+  font-size: 1.05rem;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+body.dark .step-title {
+  color: #f4f1e8;
+}
+
+.step-sublist {
+  margin: 8px 0 0;
+  padding-inline-start: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Plain list */
+
+.plain-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.plain-item {
+  background: #fff;
+  border-inline-start: 4px solid var(--blue);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 14px 16px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  border-inline-end: 1px solid var(--line);
+}
+
+body.dark .plain-item {
+  background: #1a1c28;
+}
+
+.plain-item strong {
+  display: block;
+  font-family: "Tajawal", sans-serif;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+body.dark .plain-item strong {
+  color: #f4f1e8;
+}
+
+/* Notes / calc callouts */
+
+.book-note,
+.book-calc {
+  padding: 16px 18px;
+  border-radius: var(--radius-md);
+  margin: 4px 0;
+}
+
+.book-note {
+  background: #eef8f1;
+  border-inline-start: 5px solid var(--green);
+}
+
+.book-calc {
+  background: #eaf5f9;
+  border-inline-start: 5px solid var(--blue);
+}
+
+body.dark .book-note {
+  background: #142a1e;
+}
+body.dark .book-calc {
+  background: #102530;
+}
+
+.note-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.note-icon {
+  font-size: 1.15rem;
+}
+
+.badge-eng {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.68rem;
+  background: rgba(0, 0, 0, 0.08);
+  padding: 2px 8px;
+  border-radius: 10px;
+  color: var(--text-soft);
+}
+
+body.dark .badge-eng {
+  background: rgba(255, 255, 255, 0.1);
+  color: #cfd5e4;
+}
+
+/* Table */
+
+.table-wrap {
+  overflow-x: auto;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+}
+
+.book-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+  min-width: 420px;
+}
+
+.book-table th {
+  background: var(--ink);
+  color: #f4f1e8;
+  font-family: "IBM Plex Mono", monospace;
+  font-weight: 600;
+  font-size: 0.8rem;
+  padding: 10px 12px;
+  text-align: center;
+}
+
+.book-table td {
+  padding: 10px 12px;
+  text-align: center;
+  border-top: 1px solid var(--line);
+  background: #fff;
+}
+
+body.dark .book-table td {
+  background: #1a1c28;
+}
+
+.book-table tr:nth-child(even) td {
+  background: var(--paper-panel);
+}
+
+body.dark .book-table tr:nth-child(even) td {
+  background: #20222e;
+}
+
+/* Scrollbar */
+.page-right::-webkit-scrollbar,
+.page-left::-webkit-scrollbar {
+  width: 6px;
+}
+.page-right::-webkit-scrollbar-track,
+.page-left::-webkit-scrollbar-track {
+  background: transparent;
+}
+.page-right::-webkit-scrollbar-thumb,
+.page-left::-webkit-scrollbar-thumb {
+  background: rgba(195, 31, 57, 0.2);
+  border-radius: 10px;
+}
+.page-right::-webkit-scrollbar-thumb:hover,
+.page-left::-webkit-scrollbar-thumb:hover {
+  background: var(--red);
+}
+
+/* Footer + controls */
+
+.page-footer {
+  margin-top: auto;
+  padding-top: 16px;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.75rem;
+  color: var(--text-soft);
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.book-controls {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn-book {
+  flex: 1;
+  min-width: 100px;
+  padding: 14px 16px;
+  font-size: 0.95rem;
+  font-family: "Tajawal", sans-serif;
+  font-weight: 700;
+  background: var(--ink);
+  color: #f4f1e8;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition:
+    transform 0.15s,
+    opacity 0.15s;
+}
+
+body.dark .btn-book {
+  background: #1a1c28;
+  border: 1px solid #333546;
+}
+
+/* زر الفهرس الأوسط بلون برتقالي/أصفر دافئ ومميز */
+.btn-book.amber-btn {
+  background: #d68a1a;
+  color: #fff;
+  border: 1px solid #c9860f;
+}
+body.dark .btn-book.amber-btn {
+  background: #915a00;
+  border-color: #805000;
+}
+
+.btn-book:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.btn-book:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* ---------------- الموبايل والتجاوب الذكي (Bottom Sheet) ---------------- */
+
+.index-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease;
+}
+.index-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+@media (max-width: 900px) {
+  .book-canvas {
+    grid-template-columns: 1fr;
+    height: auto;
+    min-height: 600px;
+    position: relative;
+  }
+
+  /* تحويل الفهرس لورقة تخرج من أسفل الشاشة لأعلى للموبايل */
+  .page-left {
+    position: fixed;
+    bottom: -100%; /* مخفية تماماً أسفل الشاشة */
+    left: 0;
+    right: 0;
+    top: auto;
+    width: 100%;
+    height: 75vh; /* تغطي 75% من ارتفاع شاشة الهاتف */
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0; /* زوايا دائرية جميلة في الأعلى */
+    z-index: 101;
+    border-inline-end: none;
+    border-top: 4px solid var(--amber); /* شريط برتقالي من الأعلى */
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.25);
+    transition: bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .page-left.show {
+    bottom: 0; /* تظهر للأعلى بسلاسة */
+  }
+}
+
+@media (min-width: 901px) {
+  /* إخفاء زر الفهرس تماماً على الشاشات الكبيرة */
+  #toggleIndexBtn {
+    display: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}
