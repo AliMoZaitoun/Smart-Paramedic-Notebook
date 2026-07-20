@@ -100,6 +100,10 @@ function showPage(index) {
     bodyHTML += renderTableLayout(page.table);
   }
 
+  if (page.media && page.media.length) {
+    bodyHTML += renderMediaBlocks(page.media);
+  }
+
   if (page.note) {
     bodyHTML += `
       <div class="book-note">
@@ -140,6 +144,7 @@ function renderCardsLayout(items) {
       <div class="step-content">
         <strong class="step-title">${escapeHTML(item.title)}</strong>
         <p>${escapeHTML(item.desc)}</p>
+        ${item.image ? renderImageBlock(item.image) : ""}
       </div>
     </li>
   `,
@@ -184,6 +189,60 @@ function renderTableLayout(tableData) {
       </div>
     </div>
   `;
+}
+
+/* ---------- الوسائط: صور وفيديوهات ---------- */
+function renderMediaBlocks(mediaItems) {
+  return mediaItems
+    .map((media) => {
+      if (media.type === "image") return renderImageBlock(media);
+      if (media.type === "video") return renderVideoBlock(media);
+      return "";
+    })
+    .join("");
+}
+
+function renderImageBlock(media) {
+  const safeSrc = escapeHTML(media.src || "");
+  const safeCaption = media.caption ? escapeHTML(media.caption) : "";
+  const safeCredit = media.credit ? escapeHTML(media.credit) : "";
+
+  return `
+    <figure class="media-block">
+      <img
+        src="${safeSrc}"
+        alt="${safeCaption || "صورة توضيحية"}"
+        loading="lazy"
+        onerror="this.closest('.media-block').classList.add('media-error')"
+      />
+      ${
+        safeCaption || safeCredit
+          ? `<figcaption>
+              ${safeCaption ? `<span class="media-caption">${safeCaption}</span>` : ""}
+              ${safeCredit ? `<span class="media-credit">${safeCredit}</span>` : ""}
+            </figcaption>`
+          : ""
+      }
+    </figure>`;
+}
+
+function renderVideoBlock(media) {
+  const safeId = escapeHTML(media.youtubeId || "");
+  const safeCaption = media.caption ? escapeHTML(media.caption) : "";
+
+  return `
+    <figure class="media-block media-video">
+      <div class="video-frame">
+        <iframe
+          src="https://www.youtube.com/embed/${safeId}"
+          title="${safeCaption || "فيديو توضيحي"}"
+          loading="lazy"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      </div>
+      ${safeCaption ? `<figcaption><span class="media-caption">${safeCaption}</span></figcaption>` : ""}
+    </figure>`;
 }
 
 function escapeHTML(str) {

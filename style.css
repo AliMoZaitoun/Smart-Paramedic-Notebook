@@ -1,13 +1,6 @@
-/* ==========================================================================
-   دفتر الميدان — First Aid Field Manual
-   Design: paramedic field-notebook aesthetic. Light warm background for day,
-   deep navy for dark mode. Comfortable, scrollable & highly responsive.
-   ========================================================================== */
-
 :root {
   --ink: #10192c;
   --ink-soft: #1c2c4a;
-  /* ألوان وضع النهار (Light Mode) */
   --bg-app: #f4f0e6;
   --paper: #faf6ee;
   --paper-panel: #f3ede0;
@@ -15,7 +8,6 @@
   --text: #23293a;
   --text-soft: #5b6172;
 
-  /* الألوان الطبية المميزة */
   --red: #c31f39;
   --red-deep: #9c1830;
   --green: #2f6f4e;
@@ -77,10 +69,7 @@ body.dark {
   flex: 1;
 }
 
-/* ---------------- Header ---------------- */
-
 .field-header {
-  /* خلفية فاتحة هادئة في النهار، وتتحول لداكنة في الليل */
   background: var(--paper-panel);
   color: var(--text);
   border: 1px solid var(--line);
@@ -97,12 +86,11 @@ body.dark {
   overflow: hidden;
 }
 
-/* تعديل الخط الفرعي ليكون مقروءاً على الخلفية الفاتحة */
 .brand-sub {
   font-family: "IBM Plex Mono", monospace;
   font-size: 0.68rem;
   letter-spacing: 2.5px;
-  color: var(--text-soft); /* تم تعديله ليتناسب مع الخلفية الفاتحة والداكنة */
+  color: var(--text-soft);
   margin-top: 2px;
 }
 
@@ -165,8 +153,6 @@ body.dark {
   z-index: 1;
 }
 
-/* Emergency dial cards */
-
 .emergency-dial {
   display: flex;
   align-items: center;
@@ -178,7 +164,6 @@ body.dark {
   gap: 8px;
 }
 
-/* الكرت الافتراضي (الوضع الفاتح): جعلنا الخلفية بيضاء واضحة والنصوص داكنة */
 .dial-card {
   display: flex;
   flex-direction: column;
@@ -207,7 +192,6 @@ body.dark {
   line-height: 1.1;
 }
 
-/* الألوان بالوضع الفاتح: ألوان صريحة وقوية وقابلة للقراءة */
 .dial-card.red .dial-number {
   color: var(--red);
 }
@@ -224,7 +208,6 @@ body.dark {
   margin-top: 2px;
 }
 
-/* زر الـ🌙 بالوضع الفاتح */
 .btn-icon {
   width: 42px;
   height: 42px;
@@ -262,8 +245,6 @@ body.dark .btn-icon {
   background: rgba(255, 255, 255, 0.06);
   color: #f4f1e8;
 }
-
-/* ---------------- Vitals strip ---------------- */
 
 .vitals-strip {
   position: relative;
@@ -316,8 +297,6 @@ body.dark .progress-track {
   display: none !important;
 }
 
-/* ---------------- Book canvas ---------------- */
-
 .book-canvas {
   display: grid;
   grid-template-columns: 300px 1fr;
@@ -343,6 +322,7 @@ body.dark .progress-track {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  min-height: 0;
 }
 
 @media (max-width: 768px) {
@@ -354,14 +334,17 @@ body.dark .progress-track {
   }
 }
 
-/* ---------------- Index / sidebar ---------------- */
-
 .page-left {
   background: var(--paper-panel);
   border-inline-end: 2px dashed var(--line);
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  min-height: 0;
+}
+
+#indexLinks {
+  min-height: 0;
 }
 
 .page-header {
@@ -390,7 +373,7 @@ body.dark .page-header-title {
 }
 
 .page-header-count {
-  font-family: "Cairo", sans-serif; /* تم تعديله لخط عربي أفضل */
+  font-family: "Cairo", sans-serif;
   font-size: 0.72rem;
   color: var(--text-soft);
   font-weight: 600;
@@ -414,7 +397,6 @@ body.dark .search-box {
   border-color: #333546;
 }
 
-/* تم حل مشكلة الخط هنا نهائياً للفهرس */
 .index-chapter-label {
   font-family: "Tajawal", "Cairo", sans-serif;
   font-weight: 800;
@@ -496,7 +478,6 @@ body.dark .index-item.active {
   border-color: var(--red);
 }
 
-/* ---------------- كرت معلومات التطوير والمدرب (المعدل) ---------------- */
 .developer-card {
   background: #fdfaf3;
   border: 1px solid var(--line);
@@ -537,8 +518,6 @@ body.dark .developer-card {
 body.dark .dev-body p span {
   color: #ff6b7d;
 }
-
-/* ---------------- Content page ---------------- */
 
 .page-right {
   background: var(--paper);
@@ -914,7 +893,6 @@ body.dark .btn-book {
   border: 1px solid #333546;
 }
 
-/* زر الفهرس الأوسط بلون برتقالي/أصفر دافئ ومميز */
 .btn-book.amber-btn {
   background: #d68a1a;
   color: #fff;
@@ -934,7 +912,78 @@ body.dark .btn-book.amber-btn {
   cursor: not-allowed;
 }
 
-/* ---------------- الموبايل والتجاوب الذكي (Bottom Sheet) ---------------- */
+.media-block {
+  margin: 20px 0;
+}
+
+.media-block img {
+  width: 100%;
+  max-height: 420px;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  display: block;
+}
+
+.media-block.media-error img {
+  display: none;
+}
+
+.media-block.media-error::before {
+  content: "تعذّر تحميل الصورة";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 140px;
+  border-radius: var(--radius-md);
+  border: 1px dashed var(--line);
+  color: var(--text-soft);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.8rem;
+  background: var(--paper-panel);
+}
+
+.media-block figcaption {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 8px;
+  font-size: 0.82rem;
+}
+
+.media-caption {
+  color: var(--text);
+  font-weight: 600;
+}
+
+body.dark .media-caption {
+  color: #d9d6c8;
+}
+
+.media-credit {
+  color: var(--text-soft);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.72rem;
+  white-space: nowrap;
+}
+
+.video-frame {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 */
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #000;
+}
+
+.video-frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
 
 .index-overlay {
   position: fixed;
@@ -960,30 +1009,28 @@ body.dark .btn-book.amber-btn {
     position: relative;
   }
 
-  /* تحويل الفهرس لورقة تخرج من أسفل الشاشة لأعلى للموبايل */
   .page-left {
     position: fixed;
-    bottom: -100%; /* مخفية تماماً أسفل الشاشة */
+    bottom: -100%;
     left: 0;
     right: 0;
     top: auto;
     width: 100%;
-    height: 75vh; /* تغطي 75% من ارتفاع شاشة الهاتف */
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0; /* زوايا دائرية جميلة في الأعلى */
+    height: 75vh;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
     z-index: 101;
     border-inline-end: none;
-    border-top: 4px solid var(--amber); /* شريط برتقالي من الأعلى */
+    border-top: 4px solid var(--amber);
     box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.25);
     transition: bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .page-left.show {
-    bottom: 0; /* تظهر للأعلى بسلاسة */
+    bottom: 0;
   }
 }
 
 @media (min-width: 901px) {
-  /* إخفاء زر الفهرس تماماً على الشاشات الكبيرة */
   #toggleIndexBtn {
     display: none !important;
   }
