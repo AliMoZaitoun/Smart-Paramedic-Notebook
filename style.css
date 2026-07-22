@@ -1,6 +1,13 @@
+/* ==========================================================================
+   دفتر الميدان — First Aid Field Manual
+   Design: paramedic field-notebook aesthetic. Light warm background for day,
+   deep navy for dark mode. Comfortable, scrollable & highly responsive.
+   ========================================================================== */
+
 :root {
   --ink: #10192c;
   --ink-soft: #1c2c4a;
+  /* ألوان وضع النهار (Light Mode) */
   --bg-app: #f4f0e6;
   --paper: #faf6ee;
   --paper-panel: #f3ede0;
@@ -8,6 +15,7 @@
   --text: #23293a;
   --text-soft: #5b6172;
 
+  /* الألوان الطبية المميزة */
   --red: #c31f39;
   --red-deep: #9c1830;
   --green: #2f6f4e;
@@ -22,6 +30,10 @@
 
 * {
   box-sizing: border-box;
+}
+
+html {
+  height: 100%;
 }
 
 body {
@@ -41,12 +53,24 @@ body {
   color: var(--text);
   margin: 0;
   padding: 20px;
-  min-height: 100vh;
+  min-height: 100vh; /* موبايل: الصفحة بتطول حسب محتواها بشكل طبيعي */
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   transition:
     background 0.4s,
     color 0.4s;
+}
+
+/* الديسكتوب فقط: نقفل طول الصفحة بالضبط على الشاشة، فما يصير scroll
+   إلا داخل صندوق الفهرس/المحتوى. عالموبايل الفهرس أصلاً ورقة منبثقة
+   منفصلة (bottom sheet) فما في داعي لقفل الصفحة. */
+@media (min-width: 901px) {
+  body {
+    height: 100vh;
+    min-height: 0;
+    overflow: hidden;
+  }
 }
 
 body.dark {
@@ -67,9 +91,13 @@ body.dark {
   flex-direction: column;
   gap: 14px;
   flex: 1;
+  min-height: 0; /* يسمح للعناصر جواته تنكمش بدل ما تكبّر الصفحة */
 }
 
+/* ---------------- Header ---------------- */
+
 .field-header {
+  /* خلفية فاتحة هادئة في النهار، وتتحول لداكنة في الليل */
   background: var(--paper-panel);
   color: var(--text);
   border: 1px solid var(--line);
@@ -86,11 +114,12 @@ body.dark {
   overflow: hidden;
 }
 
+/* تعديل الخط الفرعي ليكون مقروءاً على الخلفية الفاتحة */
 .brand-sub {
   font-family: "IBM Plex Mono", monospace;
   font-size: 0.68rem;
   letter-spacing: 2.5px;
-  color: var(--text-soft);
+  color: var(--text-soft); /* تم تعديله ليتناسب مع الخلفية الفاتحة والداكنة */
   margin-top: 2px;
 }
 
@@ -151,7 +180,11 @@ body.dark {
   align-items: center;
   gap: 14px;
   z-index: 1;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
+
+/* Emergency dial cards */
 
 .emergency-dial {
   display: flex;
@@ -162,8 +195,10 @@ body.dark {
 .dial-cards {
   display: flex;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
+/* الكرت الافتراضي (الوضع الفاتح): جعلنا الخلفية بيضاء واضحة والنصوص داكنة */
 .dial-card {
   display: flex;
   flex-direction: column;
@@ -192,6 +227,7 @@ body.dark {
   line-height: 1.1;
 }
 
+/* الألوان بالوضع الفاتح: ألوان صريحة وقوية وقابلة للقراءة */
 .dial-card.red .dial-number {
   color: var(--red);
 }
@@ -208,6 +244,7 @@ body.dark {
   margin-top: 2px;
 }
 
+/* زر الـ🌙 بالوضع الفاتح */
 .btn-icon {
   width: 42px;
   height: 42px;
@@ -245,6 +282,8 @@ body.dark .btn-icon {
   background: rgba(255, 255, 255, 0.06);
   color: #f4f1e8;
 }
+
+/* ---------------- Vitals strip ---------------- */
 
 .vitals-strip {
   position: relative;
@@ -297,6 +336,8 @@ body.dark .progress-track {
   display: none !important;
 }
 
+/* ---------------- Book canvas ---------------- */
+
 .book-canvas {
   display: grid;
   grid-template-columns: 300px 1fr;
@@ -304,16 +345,38 @@ body.dark .progress-track {
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
   border: 1px solid var(--line);
-  height: 650px;
-  overflow: hidden;
   flex: 1;
+  min-height: 0; /* بدون هذا، الصف بيكبر حسب المحتوى ويدفع الصفحة لتحت */
+  overflow: hidden;
 }
 
 @media (max-width: 900px) {
   .book-canvas {
     grid-template-columns: 1fr;
-    height: auto;
-    min-height: 600px;
+    min-height: 500px;
+  }
+}
+
+@media (max-width: 480px) {
+  .field-header {
+    padding: 14px 16px;
+  }
+
+  .brand-sub {
+    display: none; /* نخفي النص الإنجليزي الفرعي بالشاشات الصغيرة جداً لتوفير مساحة */
+  }
+
+  .dial-card {
+    min-width: 52px;
+    padding: 5px 8px;
+  }
+
+  .dial-number {
+    font-size: 0.9rem;
+  }
+
+  .dial-name {
+    font-size: 0.55rem;
   }
 }
 
@@ -322,7 +385,7 @@ body.dark .progress-track {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  min-height: 0;
+  min-height: 0; /* يسمح للعنصر بالانكماش داخل الـ grid بدل ما يكبّر الصفحة */
 }
 
 @media (max-width: 768px) {
@@ -333,6 +396,8 @@ body.dark .progress-track {
     font-size: 1.5rem;
   }
 }
+
+/* ---------------- Index / sidebar ---------------- */
 
 .page-left {
   background: var(--paper-panel);
@@ -373,7 +438,7 @@ body.dark .page-header-title {
 }
 
 .page-header-count {
-  font-family: "Cairo", sans-serif;
+  font-family: "Cairo", sans-serif; /* تم تعديله لخط عربي أفضل */
   font-size: 0.72rem;
   color: var(--text-soft);
   font-weight: 600;
@@ -397,6 +462,7 @@ body.dark .search-box {
   border-color: #333546;
 }
 
+/* تم حل مشكلة الخط هنا نهائياً للفهرس */
 .index-chapter-label {
   font-family: "Tajawal", "Cairo", sans-serif;
   font-weight: 800;
@@ -478,6 +544,7 @@ body.dark .index-item.active {
   border-color: var(--red);
 }
 
+/* ---------------- كرت معلومات التطوير والمدرب (المعدل) ---------------- */
 .developer-card {
   background: #fdfaf3;
   border: 1px solid var(--line);
@@ -519,10 +586,18 @@ body.dark .dev-body p span {
   color: #ff6b7d;
 }
 
+/* ---------------- Content page ---------------- */
+
 .page-right {
   background: var(--paper);
-  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+}
+
+@media (min-width: 901px) {
+  .page-right {
+    overflow-y: auto;
+    min-height: 0;
+  }
 }
 
 .page-meta {
@@ -830,6 +905,90 @@ body.dark .book-table tr:nth-child(even) td {
   background: #20222e;
 }
 
+/* عرض بطاقات على الموبايل بدل جدول أفقي بحاجة scroll */
+@media (max-width: 640px) {
+  .table-wrap {
+    overflow-x: visible;
+    border: none;
+  }
+
+  .book-table {
+    min-width: 0;
+  }
+
+  .book-table thead {
+    /* نخفي رأس الجدول الأصلي، لأن كل خانة رح تعرض اسم عمودها لحالها */
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .book-table,
+  .book-table tbody,
+  .book-table tr,
+  .book-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .book-table tr {
+    margin-bottom: 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: #fff;
+  }
+
+  body.dark .book-table tr {
+    background: #1a1c28;
+    border-color: #333546;
+  }
+
+  .book-table tr:nth-child(even) td {
+    background: transparent; /* اللون بيصير على مستوى الصف مش الخانة */
+  }
+
+  .book-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: start;
+    padding: 10px 14px;
+    border-top: 1px solid var(--line);
+  }
+
+  body.dark .book-table td {
+    border-color: #333546;
+  }
+
+  .book-table tr td:first-child {
+    border-top: none;
+    font-weight: 700;
+    background: var(--paper-panel);
+  }
+
+  body.dark .book-table tr td:first-child {
+    background: #20222e;
+  }
+
+  .book-table td::before {
+    content: attr(data-label);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.7rem;
+    color: var(--text-soft);
+    margin-inline-end: 12px;
+    flex-shrink: 0;
+  }
+
+  .book-table tr td:first-child::before {
+    content: "";
+    display: none;
+  }
+}
+
 /* Scrollbar */
 .page-right::-webkit-scrollbar,
 .page-left::-webkit-scrollbar {
@@ -893,6 +1052,7 @@ body.dark .btn-book {
   border: 1px solid #333546;
 }
 
+/* زر الفهرس الأوسط بلون برتقالي/أصفر دافئ ومميز */
 .btn-book.amber-btn {
   background: #d68a1a;
   color: #fff;
@@ -911,6 +1071,8 @@ body.dark .btn-book.amber-btn {
   opacity: 0.35;
   cursor: not-allowed;
 }
+
+/* ---------------- الوسائط: صور وفيديوهات ---------------- */
 
 .media-block {
   margin: 20px 0;
@@ -985,6 +1147,8 @@ body.dark .media-caption {
   border: 0;
 }
 
+/* ---------------- الموبايل والتجاوب الذكي (Bottom Sheet) ---------------- */
+
 .index-overlay {
   position: fixed;
   inset: 0;
@@ -1009,28 +1173,30 @@ body.dark .media-caption {
     position: relative;
   }
 
+  /* تحويل الفهرس لورقة تخرج من أسفل الشاشة لأعلى للموبايل */
   .page-left {
     position: fixed;
-    bottom: -100%;
+    bottom: -100%; /* مخفية تماماً أسفل الشاشة */
     left: 0;
     right: 0;
     top: auto;
     width: 100%;
-    height: 75vh;
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    height: 75vh; /* تغطي 75% من ارتفاع شاشة الهاتف */
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0; /* زوايا دائرية جميلة في الأعلى */
     z-index: 101;
     border-inline-end: none;
-    border-top: 4px solid var(--amber);
+    border-top: 4px solid var(--amber); /* شريط برتقالي من الأعلى */
     box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.25);
     transition: bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .page-left.show {
-    bottom: 0;
+    bottom: 0; /* تظهر للأعلى بسلاسة */
   }
 }
 
 @media (min-width: 901px) {
+  /* إخفاء زر الفهرس تماماً على الشاشات الكبيرة */
   #toggleIndexBtn {
     display: none !important;
   }

@@ -174,7 +174,12 @@ function renderTableLayout(tableData) {
   const rows = tableData.rows
     .map(
       (row) => `
-    <tr>${row.map((cell) => `<td>${escapeHTML(cell)}</td>`).join("")}</tr>
+    <tr>${row
+      .map(
+        (cell, i) =>
+          `<td data-label="${escapeHTML(tableData.headers[i] || "")}">${escapeHTML(cell)}</td>`,
+      )
+      .join("")}</tr>
   `,
     )
     .join("");
