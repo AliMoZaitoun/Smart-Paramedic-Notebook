@@ -1080,8 +1080,9 @@ body.dark .btn-book.amber-btn {
 
 .media-block img {
   width: 100%;
+  height: auto;
   max-height: 420px;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: var(--radius-md);
   border: 1px solid var(--line);
   display: block;
