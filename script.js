@@ -153,13 +153,20 @@ function renderCardsLayout(items) {
   return `<ul class="step-list">${cardsHTML}</ul>`;
 }
 
+function parseFormattedText(str) {
+  if (!str) return "";
+  let safe = escapeHTML(str);
+  safe = safe.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+  return safe;
+}
+
 function renderBoxesLayout(items) {
   const boxesHTML = items
     .map(
       (item) => `
     <li class="plain-item">
-      <strong>${escapeHTML(item.title)}</strong>
-      <p>${escapeHTML(item.desc)}</p>
+      <strong>${parseFormattedText(item.title)}</strong>
+      <p>${parseFormattedText(item.desc)}</p>
     </li>
   `,
     )

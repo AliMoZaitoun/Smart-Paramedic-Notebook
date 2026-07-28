@@ -795,6 +795,10 @@ body.dark .step-title {
   border-inline-end: 1px solid var(--line);
 }
 
+.plain-item p {
+  white-space: pre-line;
+}
+
 body.dark .plain-item {
   background: #1a1c28;
 }
